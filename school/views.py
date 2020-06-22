@@ -6,7 +6,7 @@ from .models import Student
 
 def students_list(request):
     template = 'school/students_list.html'
-    context = {"object_list": Student.objects.prefetch_related("teachers").order_by("name").all()}
+    context = {"object_list": Student.objects.order_by("-name", "teachers__name", ).prefetch_related("teachers").all()}
 
     #:TODO Как сделать второй уровень сортировки по именам учителей?
 
