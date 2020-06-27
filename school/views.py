@@ -1,13 +1,16 @@
+from django.db.models import Prefetch
 from django.views.generic import ListView
 from django.shortcuts import render
 
-from .models import Student
+from .models import Student, Teacher
 
 
 def students_list(request):
     template = 'school/students_list.html'
-    context = {"object_list": Student.objects.order_by("-name", "teachers__name", ).prefetch_related("teachers").all()}
+    students_teachers = Student.objects.order_by('-name').prefetch_related(
+        Prefetch('teachers', Teacher.objects.order_by('name'))
+    ).all()
+    context = {"object_list": students_teachers}
 
-    #:TODO Как сделать второй уровень сортировки по именам учителей?
 
     return render(request, template, context)
